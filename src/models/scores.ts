@@ -1,3 +1,6 @@
+import * as Teams from "./teams.ts";
+import * as Challenges from "./challenges.ts";
+
 const db = await Deno.openKv();
 
 export const PREFIX = "score";
@@ -7,14 +10,28 @@ export const set = async (
   challengeId: string,
   score: number
 ) => {
+  const [team, challenge] = await db.getMany<[string, string]>([
+    [Teams.PREFIX, teamId],
+    [Challenges.PREFIX, challengeId],
+  ]);
+  if (!team.value || !challenge.value) {
+    return { success: false };
+  }
+
   await db.set([PREFIX, teamId, challengeId], score);
 
-  return {
-    success: true,
-  };
+  return { success: true };
 };
 
 export const get = async (teamId: string, challengeId: string) => {
+  const [team, challenge] = await db.getMany<[string, string]>([
+    [Teams.PREFIX, teamId],
+    [Challenges.PREFIX, challengeId],
+  ]);
+  if (!team.value || !challenge.value) {
+    return null;
+  }
+
   const score = await db.get<number>([PREFIX, teamId, challengeId]);
 
   if (!score.value) {
@@ -51,8 +68,4 @@ export const remove = async (type: "team" | "challenge", id: string) => {
       await db.delete(entry.key);
     }
   }
-
-  return {
-    success: true,
-  };
 };

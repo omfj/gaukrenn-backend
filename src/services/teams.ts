@@ -20,15 +20,11 @@ app.get("/challenges/:id", async (c) => {
 });
 
 app.post("/", async (c) => {
-  const team = await c.req.json<{ name: string }>();
+  const json = await c.req.json<{ name: string }>();
 
-  const { success, data } = await Teams.add(team.name);
-  if (!success) {
-    c.status(500);
-    return c.text("Failed to add team");
-  }
+  const team = await Teams.add(json.name);
 
-  return c.json(data);
+  return c.json(team);
 });
 
 app.delete("/:id", async (c) => {

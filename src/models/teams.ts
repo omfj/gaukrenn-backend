@@ -10,11 +10,8 @@ export const add = async (name: string) => {
   await db.set([PREFIX, id], name);
 
   return {
-    success: true,
-    data: {
-      id,
-      name,
-    },
+    id,
+    name,
   };
 };
 
@@ -28,7 +25,6 @@ export const remove = async (id: string) => {
   }
 
   await db.delete(["team", id]);
-
   await Scores.remove("team", id);
 
   return {

@@ -4,17 +4,13 @@ const db = await Deno.openKv();
 
 export const PREFIX = "challenge";
 
-export type Challenge = {
-  name: string;
-};
-
 export const getAll = async () => {
-  const entries = db.list<Challenge>({ prefix: [PREFIX] });
+  const entries = db.list<string>({ prefix: [PREFIX] });
 
   const challenges = [];
   for await (const entry of entries) {
     const id = entry.key[entry.key.length - 1].toString();
-    const name = entry.value.name;
+    const name = entry.value;
     challenges.push({
       id,
       name,
@@ -25,41 +21,31 @@ export const getAll = async () => {
 };
 
 export const get = async (id: string) => {
-  const challenge = await db.get<Challenge>([PREFIX, id]);
+  const challenge = await db.get<string>([PREFIX, id]);
 
-  if (!challenge) {
-    return {
-      success: false,
-    };
+  if (!challenge.value) {
+    return null;
   }
 
   return {
-    success: true,
-    data: {
-      id,
-      ...challenge.value,
-    },
+    id,
+    name: challenge.value,
   };
 };
 
 export const add = async (name: string) => {
   const id = crypto.randomUUID();
 
-  await db.set([PREFIX, id], {
-    name,
-  });
+  await db.set([PREFIX, id], name);
 
   return {
-    success: true,
-    data: {
-      id,
-      name,
-    },
+    id,
+    name,
   };
 };
 
 export const remove = async (id: string) => {
-  const exisitingChallenge = await db.get<Challenge>([PREFIX, id]);
+  const exisitingChallenge = await db.get<string>([PREFIX, id]);
 
   if (!exisitingChallenge) {
     return {
@@ -68,7 +54,6 @@ export const remove = async (id: string) => {
   }
 
   await db.delete(["challenge", id]);
-
   await Scores.remove("challenge", id);
 
   return {

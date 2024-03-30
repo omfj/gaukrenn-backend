@@ -10,7 +10,8 @@ import challengesService from "./services/challenges.ts";
 
 const app = new Hono();
 
-app.use("/api/*", logger(), cors());
+app.use(logger());
+app.use("/api/*", cors());
 
 app.route("/api/teams", teamsService);
 app.route("/api/push", pushService);

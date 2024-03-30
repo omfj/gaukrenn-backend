@@ -12,30 +12,33 @@ app.get("/", async (c) => {
 app.post("/", async (c) => {
   const json = await c.req.json<{ name: string }>();
 
-  const { success, data } = await Challenges.add(json.name);
-  if (!success) {
+  const challenge = await Challenges.add(json.name);
+  if (!challenge) {
     c.status(500);
     return c.text("Failed to add challenge");
   }
 
-  return c.json(data);
+  return c.json(challenge);
 });
 
 app.get("/:id", async (c) => {
   const id = c.req.param("id");
-  const { success, data } = await Challenges.get(id);
-  if (!success) {
+
+  const challenge = await Challenges.get(id);
+  if (!challenge) {
     c.status(404);
     return c.text("Challenge not found");
   }
 
-  return c.json(data);
+  return c.json(challenge);
 });
 
 app.delete("/:id", async (c) => {
   const id = c.req.param("id");
+
   const { success } = await Challenges.remove(id);
   if (!success) {
+    c.status(500);
     return c.text("Failed to remove challenge");
   }
 
