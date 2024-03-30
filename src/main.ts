@@ -1,6 +1,5 @@
 import { Hono } from "https://deno.land/x/hono@v4.1.5/mod.ts";
 import { logger, cors } from "https://deno.land/x/hono@v4.1.5/middleware.ts";
-import { showRoutes } from "https://deno.land/x/hono@v4.1.5/helper.ts";
 
 // Services
 import teamsService from "./services/teams.ts";
@@ -18,7 +17,5 @@ app.route("/api/push", pushService);
 app.route("/api/scores", scoresService);
 app.route("/api/challenges", challengesService);
 app.route("/ws", wsService);
-
-console.log(showRoutes(app));
 
 Deno.serve(app.fetch);
