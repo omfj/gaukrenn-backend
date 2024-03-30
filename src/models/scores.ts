@@ -8,7 +8,7 @@ export const PREFIX = "score";
 export const set = async (
   teamId: string,
   challengeId: string,
-  score: number
+  score: number,
 ) => {
   const [team, challenge] = await db.getMany<[string, string]>([
     [Teams.PREFIX, teamId],

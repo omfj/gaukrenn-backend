@@ -15,7 +15,7 @@ app.get(
         connectedClients.delete(ws);
       },
     };
-  })
+  }),
 );
 
 export default app;

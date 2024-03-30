@@ -1,5 +1,5 @@
 import { Hono } from "https://deno.land/x/hono@v4.1.5/mod.ts";
-import { logger, cors } from "https://deno.land/x/hono@v4.1.5/middleware.ts";
+import { cors, logger } from "https://deno.land/x/hono@v4.1.5/middleware.ts";
 
 // Services
 import teamsService from "./services/teams.ts";
