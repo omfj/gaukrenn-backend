@@ -30,7 +30,7 @@ app.post("/teams/:teamId/challenges/:challengeId", async (c) => {
     return c.text("Failed to set score");
   }
 
-  return c.text("Score set");
+  return c.json({ score: json.score });
 });
 
 export default app;
